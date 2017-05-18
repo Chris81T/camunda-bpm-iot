@@ -2,6 +2,7 @@ package de.chrthms.mco.impl;
 
 import de.chrthms.mco.MicroProcessEngine;
 import de.chrthms.mco.MicroProcessEngineFactory;
+import de.chrthms.mco.exceptions.McoRuntimeException;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 
@@ -15,28 +16,53 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
     private String username = null;
     private String password = null;
 
+    private boolean isValuePresent(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+    private boolean isValueEmpty(String value) {
+        return !isValuePresent(value);
+    }
+
     @Override
     public MicroProcessEngineFactory jdbcDriver(String driver) {
-        return null;
+        this.driver = driver;
+        return this;
     }
 
     @Override
     public MicroProcessEngineFactory jdbcUrl(String url) {
-        return null;
+        this.url = url;
+        return this;
+
     }
 
     @Override
     public MicroProcessEngineFactory jdbcUsername(String username) {
-        return null;
+        this.username = username;
+        return this;
+
     }
 
     @Override
     public MicroProcessEngineFactory jdbcPassword(String password) {
-        return null;
+        this.password = password;
+        return this;
+
     }
 
     @Override
-    public MicroProcessEngine build() {
+    public MicroProcessEngine build() throws McoRuntimeException {
+
+        if (isValueEmpty(driver) || isValueEmpty(url)) {
+            throw new McoRuntimeException(new StringBuilder()
+                .append("Missing information to build micro process-engine. At least driver = '")
+                .append(driver)
+                .append("' and url = '")
+                .append(url)
+                .append("' must be set.")
+                .toString());
+        }
 
         ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration()
                 .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE)

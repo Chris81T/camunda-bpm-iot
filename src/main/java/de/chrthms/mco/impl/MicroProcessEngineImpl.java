@@ -7,7 +7,7 @@ import org.camunda.bpm.engine.*;
 /**
  * Created by christian on 18.05.17.
  */
-public class MicroProcessEngineImpl implements ProcessEngine, MicroProcessEngine {
+public class MicroProcessEngineImpl implements MicroProcessEngine {
 
     private final ProcessEngine processEngine;
 

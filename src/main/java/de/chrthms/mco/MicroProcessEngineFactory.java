@@ -1,5 +1,6 @@
 package de.chrthms.mco;
 
+import de.chrthms.mco.exceptions.McoRuntimeException;
 import de.chrthms.mco.impl.MicroProcessEngineFactoryImpl;
 
 /**
@@ -19,6 +20,6 @@ public interface MicroProcessEngineFactory {
 
     MicroProcessEngineFactory jdbcPassword(String password);
 
-    MicroProcessEngine build();
+    MicroProcessEngine build()  throws McoRuntimeException;
 
 }
