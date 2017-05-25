@@ -1,4 +1,6 @@
 /*
+ * Copyright 2017 Christian Thomas.
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,19 +23,30 @@ package de.chrthms.mco.impl;
 
 import de.chrthms.mco.MicroProcessEngine;
 import de.chrthms.mco.MicroProcessEngineFactory;
+import de.chrthms.mco.enums.MqttQoS;
 import de.chrthms.mco.exceptions.McoRuntimeException;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttClient;
 
 /**
  * Created by christian on 18.05.17.
  */
 public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory {
 
-    private String driver = null;
-    private String url = null;
-    private String username = null;
-    private String password = null;
+    private String jdbcDriver = null;
+    private String jdbcUrl = null;
+    private String jdbcUsername = null;
+    private String jdbcPassword = null;
+
+    private boolean mqttEnabled = false;
+    private String mqttBroker = null;
+    private String mqttUsername = null;
+    private String mqttPassword = null;
+    private String mqttClientId = null;
+    private MqttQoS mqttQoS = MqttQoS.EXACTLY_ONCE;
+    private boolean mqttRetained = false;
 
     private boolean isValuePresent(String value) {
         return value != null && !value.trim().isEmpty();
@@ -45,54 +58,122 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
 
     @Override
     public MicroProcessEngineFactory jdbcDriver(String driver) {
-        this.driver = driver;
+        this.jdbcDriver = driver;
         return this;
     }
 
     @Override
     public MicroProcessEngineFactory jdbcUrl(String url) {
-        this.url = url;
+        this.jdbcUrl = url;
         return this;
 
     }
 
     @Override
     public MicroProcessEngineFactory jdbcUsername(String username) {
-        this.username = username;
+        this.jdbcUsername = username;
         return this;
 
     }
 
     @Override
     public MicroProcessEngineFactory jdbcPassword(String password) {
-        this.password = password;
+        this.jdbcPassword = password;
         return this;
 
     }
 
     @Override
+    public MicroProcessEngineFactory mqttEnabled(Boolean enabled) {
+        this.mqttEnabled = enabled;
+        return this;
+    }
+
+    @Override
+    public MicroProcessEngineFactory mqttBroker(String broker) {
+        this.mqttBroker = broker;
+        return this;
+    }
+
+    @Override
+    public MicroProcessEngineFactory mqttUsername(String username) {
+        this.mqttUsername = username;
+        return this;
+    }
+
+    @Override
+    public MicroProcessEngineFactory mqttPassword(String password) {
+        this.mqttPassword = password;
+        return this;
+    }
+
+    @Override
+    public MicroProcessEngineFactory mqttQoS(MqttQoS qos) {
+        this.mqttQoS = qos;
+        return this;
+    }
+
+    @Override
+    public MicroProcessEngineFactory mqttClientId(String clientId) {
+        return this;
+    }
+
+    @Override
+    public MicroProcessEngineFactory mqttRetained(Boolean retained) {
+        return this;
+    }
+
+    private MqttAsyncClient buildMqttClient() throws McoRuntimeException {
+        try {
+            MqttAsyncClient client = new MqttAsyncClient(mqttBroker, mqttClientId != null ? mqttClientId : MqttClient.generateClientId());
+
+//            client.c
+
+            // TODO Sync vs. Async Client?! Async preferred in a process (batch) context
+
+            return client;
+
+        } catch (Exception e) {
+            throw new McoRuntimeException("Could not build mqtt-client for micro process-engine. Check exception details!", e);
+        }
+    }
+
+    @Override
     public MicroProcessEngine build() throws McoRuntimeException {
 
-        if (isValueEmpty(driver) || isValueEmpty(url)) {
-            throw new McoRuntimeException(new StringBuilder()
-                .append("Missing information to build micro process-engine. At least driver = '")
-                .append(driver)
-                .append("' and url = '")
-                .append(url)
-                .append("' must be set.")
-                .toString());
+        try {
+
+            if (isValueEmpty(jdbcDriver) || isValueEmpty(jdbcUrl)) {
+                throw new McoRuntimeException(new StringBuilder()
+                    .append("Missing information to build micro process-engine. At least jdbcDriver = '")
+                    .append(jdbcDriver)
+                    .append("' and jdbcUrl = '")
+                    .append(jdbcUrl)
+                    .append("' must be set.")
+                    .toString());
+            }
+
+            ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration()
+                    .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE)
+                    .setJdbcDriver(jdbcDriver)
+                    .setJdbcUrl(jdbcUrl)
+                    .setJdbcUsername(jdbcUsername)
+                    .setJdbcPassword(jdbcPassword)
+                    .setHistory(ProcessEngineConfiguration.HISTORY_AUDIT)
+                    .setJobExecutorActivate(Boolean.TRUE)
+                    .buildProcessEngine();
+
+            if (mqttEnabled) {
+                return new MicroProcessEngineImpl(processEngine, buildMqttClient());
+            } else {
+                return new MicroProcessEngineImpl(processEngine);
+            }
+
+        } catch (McoRuntimeException e) {
+          throw e;
+        } catch (Exception e) {
+            throw new McoRuntimeException("Could not build micro process-engine. Check exception details!", e);
         }
 
-        ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration()
-                .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_TRUE)
-                .setJdbcDriver(driver)
-                .setJdbcUrl(url)
-                .setJdbcUsername(username)
-                .setJdbcPassword(password)
-                .setHistory(ProcessEngineConfiguration.HISTORY_AUTO)
-                .setJobExecutorActivate(Boolean.TRUE)
-                .buildProcessEngine();
-
-        return new MicroProcessEngineImpl(processEngine);
     }
 }

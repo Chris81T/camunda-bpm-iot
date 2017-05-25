@@ -19,34 +19,25 @@
  * under the License.
  */
 
-package de.chrthms.mco;
-
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.repository.Deployment;
+package de.chrthms.mco.enums;
 
 /**
- * Created by christian on 18.05.17.
+ * Created by christian on 25.05.17.
  */
-public interface MicroProcessEngine extends ProcessEngine {
+public enum MqttQoS {
 
-    MicroOpenhabService getMicroOpenhabService();
+    AT_MOST_ONCE(0),
+    AT_LEAST_ONCE(1),
+    EXACTLY_ONCE(2);
 
-    /**
-     * Simply tell the name of bpmn file.
-     *
-     * @param filename e.g. "my-process.bpmn"
-     * @return
-     */
-    Deployment createDeploymentFromResource(String filename);
+    private final int value;
 
-    /**
-     * Use this one, if process file is not inside the src/main/resources/processes folder to deploy an available
-     * bpmn process.
-     *
-     * @param folderName e.g. "/myspecial/folder/to/processes"
-     * @param filename e.g. "my-process.bpmn"
-     * @return
-     */
-    Deployment createDeploymentFromResource(String folderName, String filename);
+    private MqttQoS(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
 
 }

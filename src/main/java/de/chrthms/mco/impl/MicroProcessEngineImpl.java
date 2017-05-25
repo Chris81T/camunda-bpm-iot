@@ -1,4 +1,6 @@
 /*
+ * Copyright 2017 Christian Thomas.
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,21 +24,49 @@ package de.chrthms.mco.impl;
 import de.chrthms.mco.MicroOpenhabService;
 import de.chrthms.mco.MicroProcessEngine;
 import org.camunda.bpm.engine.*;
+import org.camunda.bpm.engine.repository.Deployment;
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 
 /**
  * Created by christian on 18.05.17.
  */
 public class MicroProcessEngineImpl implements MicroProcessEngine {
 
+    private static final String DEFAULT_PROCESSES_FOLDER = "/processes";
+
     private final ProcessEngine processEngine;
+
+    private MqttAsyncClient mqttClient = null;
 
     public MicroProcessEngineImpl(ProcessEngine processEngine) {
         this.processEngine = processEngine;
     }
 
+    public MicroProcessEngineImpl(ProcessEngine processEngine, MqttAsyncClient mqttClient) {
+        this.processEngine = processEngine;
+        this.mqttClient = mqttClient;
+    }
+
     @Override
     public MicroOpenhabService getMicroOpenhabService() {
         return null;
+    }
+
+    @Override
+    public Deployment createDeploymentFromResource(String filename) {
+        return createDeploymentFromResource(DEFAULT_PROCESSES_FOLDER, filename);
+    }
+
+    @Override
+    public Deployment createDeploymentFromResource(String folderName, String filename) {
+        return getRepositoryService()
+                .createDeployment()
+                .addInputStream(filename, getClass().getResourceAsStream(new StringBuilder()
+                    .append(folderName)
+                    .append("/")
+                    .append(filename)
+                    .toString()))
+                .deploy();
     }
 
     @Override
