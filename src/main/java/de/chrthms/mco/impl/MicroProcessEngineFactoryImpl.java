@@ -25,6 +25,7 @@ import de.chrthms.mco.MicroProcessEngine;
 import de.chrthms.mco.MicroProcessEngineFactory;
 import de.chrthms.mco.enums.MqttQoS;
 import de.chrthms.mco.exceptions.McoRuntimeException;
+import de.chrthms.mco.platform.MicroBpmPlatform;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -156,6 +157,8 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
 
         try {
 
+            MicroProcessEngine microProcessEngine = null;
+
             if (isValueEmpty(jdbcDriver) || isValueEmpty(jdbcUrl)) {
                 throw new McoRuntimeException(new StringBuilder()
                     .append("Missing information to build micro process-engine. At least jdbcDriver = '")
@@ -177,10 +180,13 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
                     .buildProcessEngine();
 
             if (mqttEnabled) {
-                return new MicroProcessEngineImpl(processEngine, buildMqttClient(), mqttQoS, mqttRetained);
+                microProcessEngine = new MicroProcessEngineImpl(processEngine, buildMqttClient(), mqttQoS, mqttRetained);
             } else {
-                return new MicroProcessEngineImpl(processEngine);
+                microProcessEngine = new MicroProcessEngineImpl(processEngine);
             }
+
+            MicroBpmPlatform.setMicroProcessEngine(microProcessEngine);
+            return microProcessEngine;
 
         } catch (McoRuntimeException e) {
           throw e;
