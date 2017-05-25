@@ -29,6 +29,7 @@ import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
 /**
  * Created by christian on 18.05.17.
@@ -42,6 +43,7 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
 
     private boolean mqttEnabled = false;
     private String mqttBroker = null;
+    private boolean mqttAutoReconnect = false;
     private String mqttUsername = null;
     private String mqttPassword = null;
     private String mqttClientId = null;
@@ -96,6 +98,12 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
     }
 
     @Override
+    public MicroProcessEngineFactory mqttAutoReconnect(Boolean reconnect) {
+        this.mqttAutoReconnect = reconnect;
+        return this;
+    }
+
+    @Override
     public MicroProcessEngineFactory mqttUsername(String username) {
         this.mqttUsername = username;
         return this;
@@ -127,10 +135,15 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
         try {
             MqttAsyncClient client = new MqttAsyncClient(mqttBroker, mqttClientId != null ? mqttClientId : MqttClient.generateClientId());
 
-//            client.c
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setAutomaticReconnect(mqttAutoReconnect);
 
-            // TODO Sync vs. Async Client?! Async preferred in a process (batch) context
+            if (mqttUsername != null) {
+                options.setUserName(mqttUsername);
+                options.setPassword(mqttPassword.toCharArray());
+            }
 
+            client.connect(options);
             return client;
 
         } catch (Exception e) {
@@ -164,7 +177,7 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
                     .buildProcessEngine();
 
             if (mqttEnabled) {
-                return new MicroProcessEngineImpl(processEngine, buildMqttClient());
+                return new MicroProcessEngineImpl(processEngine, buildMqttClient(), mqttQoS, mqttRetained);
             } else {
                 return new MicroProcessEngineImpl(processEngine);
             }

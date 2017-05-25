@@ -40,6 +40,12 @@ public interface MicroProcessEngineFactory {
 
     MicroProcessEngineFactory jdbcUsername(String username);
 
+    /**
+     * Will only be recognized, if username is set.
+     *
+     * @param password
+     * @return
+     */
     MicroProcessEngineFactory jdbcPassword(String password);
 
     /**
@@ -58,6 +64,13 @@ public interface MicroProcessEngineFactory {
      * @return the factory
      */
     MicroProcessEngineFactory mqttBroker(String broker);
+
+    /**
+     * Possible to reconnect automatically, if server connection is lost.
+     * @param reconnect false per default
+     * @return
+     */
+    MicroProcessEngineFactory mqttAutoReconnect(Boolean reconnect);
 
     MicroProcessEngineFactory mqttUsername(String username);
 

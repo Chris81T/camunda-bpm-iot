@@ -23,9 +23,14 @@ package de.chrthms.mco.impl;
 
 import de.chrthms.mco.MicroOpenhabService;
 import de.chrthms.mco.MicroProcessEngine;
+import de.chrthms.mco.enums.MqttQoS;
+import de.chrthms.mco.exceptions.McoRuntimeException;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+
+import java.util.Optional;
 
 /**
  * Created by christian on 18.05.17.
@@ -37,14 +42,19 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     private final ProcessEngine processEngine;
 
     private MqttAsyncClient mqttClient = null;
+    private MqttQoS mqttQoS = null;
+    private Boolean mqttRetained = null;
 
     public MicroProcessEngineImpl(ProcessEngine processEngine) {
         this.processEngine = processEngine;
     }
 
-    public MicroProcessEngineImpl(ProcessEngine processEngine, MqttAsyncClient mqttClient) {
+    public MicroProcessEngineImpl(ProcessEngine processEngine, MqttAsyncClient mqttClient, MqttQoS mqttQoS,
+                                  boolean mqttRetained) {
         this.processEngine = processEngine;
         this.mqttClient = mqttClient;
+        this.mqttQoS = mqttQoS;
+        this.mqttRetained = mqttRetained;
     }
 
     @Override
@@ -70,6 +80,19 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     }
 
     @Override
+    public void sendMessageToItem(String topic, String message) throws McoRuntimeException {
+        if (Optional.ofNullable(mqttClient).isPresent()) {
+            try {
+                mqttClient.publish(topic, message.getBytes(), mqttQoS.getValue(), mqttRetained);
+            } catch (MqttException e) {
+                throw new McoRuntimeException("Sending message to item failed!", e);
+            }
+        }
+
+        throw new McoRuntimeException("No active MQTT client! Please configure one!");
+    }
+
+    @Override
     public String getName() {
         return processEngine.getName();
     }
@@ -77,6 +100,15 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     @Override
     public void close() {
         processEngine.close();
+
+        if (Optional.ofNullable(mqttClient).isPresent()) {
+            try {
+                mqttClient.disconnect();
+                mqttClient.close();
+            } catch (MqttException e) {
+                throw new McoRuntimeException("Disconnecting and closing the MQTT Client failed!", e);
+            }
+        }
     }
 
     @Override

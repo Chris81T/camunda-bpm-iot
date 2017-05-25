@@ -21,6 +21,7 @@
 
 package de.chrthms.mco;
 
+import de.chrthms.mco.exceptions.McoRuntimeException;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.repository.Deployment;
 
@@ -48,5 +49,12 @@ public interface MicroProcessEngine extends ProcessEngine {
      * @return
      */
     Deployment createDeploymentFromResource(String folderName, String filename);
+
+    /**
+     * TODO First test implementation...
+     * @param topic
+     * @param message
+     */
+    void sendMessageToItem(String topic, String message) throws McoRuntimeException;
 
 }
