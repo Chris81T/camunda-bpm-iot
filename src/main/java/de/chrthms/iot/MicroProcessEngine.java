@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package de.chrthms.mco;
+package de.chrthms.iot;
 
-import de.chrthms.mco.exceptions.McoRuntimeException;
+import de.chrthms.iot.exceptions.McoRuntimeException;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.repository.Deployment;
 

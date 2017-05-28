@@ -19,10 +19,23 @@
  * under the License.
  */
 
-package de.chrthms.mco;
+package de.chrthms.iot.platform;
+
+import de.chrthms.iot.MicroProcessEngine;
 
 /**
- * Created by christian on 18.05.17.
+ * Created by christian on 25.05.17.
  */
-public interface MicroOpenhabService {
+public class MicroBpmPlatform {
+
+    private static MicroProcessEngine INSTANCE = null;
+
+    public static MicroProcessEngine getMicroProcessEngine() {
+        return INSTANCE;
+    }
+
+    public static void setMicroProcessEngine(MicroProcessEngine microProcessEngine) {
+        INSTANCE = microProcessEngine;
+    }
+
 }

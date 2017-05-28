@@ -19,21 +19,19 @@
  * under the License.
  */
 
-package de.chrthms.mco.delegates;
-
-import de.chrthms.mco.delegates.impl.MicroDelegateExecutionImpl;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+package de.chrthms.iot.exceptions;
 
 /**
- * Created by christian on 25.05.17.
+ * Created by christian on 18.05.17.
  */
-public abstract class MicroJavaDelegate implements JavaDelegate {
+public class McoRuntimeException extends RuntimeException {
 
-    public abstract void execute(MicroDelegateExecution execution) throws Exception;
-
-    @Override
-    public void execute(DelegateExecution execution) throws Exception {
-        execute(new MicroDelegateExecutionImpl(execution));
+    public McoRuntimeException(String message) {
+        super(message);
     }
+
+    public McoRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

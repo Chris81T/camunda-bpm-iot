@@ -19,23 +19,22 @@
  * under the License.
  */
 
-package de.chrthms.mco.platform;
+package de.chrthms.iot.delegates;
 
-import de.chrthms.mco.MicroProcessEngine;
+import de.chrthms.iot.delegates.impl.MicroDelegateExecutionImpl;
+import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 /**
  * Created by christian on 25.05.17.
  */
-public class MicroBpmPlatform {
+public interface MicroJavaDelegateInterface extends JavaDelegate {
 
-    private static MicroProcessEngine INSTANCE = null;
+    void execute(MicroDelegateExecution execution) throws Exception;
 
-    public static MicroProcessEngine getMicroProcessEngine() {
-        return INSTANCE;
+    @Override
+    default void execute(DelegateExecution execution) throws Exception {
+        System.out.println("DEFAULT EXECUTE IMPL INSIDE THE INTERFACE TESTOR...");
+        execute(new MicroDelegateExecutionImpl(execution));
     }
-
-    public static void setMicroProcessEngine(MicroProcessEngine microProcessEngine) {
-        INSTANCE = microProcessEngine;
-    }
-
 }

@@ -19,19 +19,25 @@
  * under the License.
  */
 
-package de.chrthms.mco.exceptions;
+package de.chrthms.iot.enums;
 
 /**
- * Created by christian on 18.05.17.
+ * Created by christian on 25.05.17.
  */
-public class McoRuntimeException extends RuntimeException {
+public enum MqttQoS {
 
-    public McoRuntimeException(String message) {
-        super(message);
+    AT_MOST_ONCE(0),
+    AT_LEAST_ONCE(1),
+    EXACTLY_ONCE(2);
+
+    private final int value;
+
+    private MqttQoS(int value) {
+        this.value = value;
     }
 
-    public McoRuntimeException(String message, Throwable cause) {
-        super(message, cause);
+    public int getValue() {
+        return value;
     }
 
 }

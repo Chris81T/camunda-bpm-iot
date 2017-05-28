@@ -19,22 +19,10 @@
  * under the License.
  */
 
-package de.chrthms.mco.delegates;
-
-import de.chrthms.mco.delegates.impl.MicroDelegateExecutionImpl;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+package de.chrthms.iot;
 
 /**
- * Created by christian on 25.05.17.
+ * Created by christian on 18.05.17.
  */
-public interface MicroJavaDelegateInterface extends JavaDelegate {
-
-    void execute(MicroDelegateExecution execution) throws Exception;
-
-    @Override
-    default void execute(DelegateExecution execution) throws Exception {
-        System.out.println("DEFAULT EXECUTE IMPL INSIDE THE INTERFACE TESTOR...");
-        execute(new MicroDelegateExecutionImpl(execution));
-    }
+public interface MicroOpenhabService {
 }

@@ -19,16 +19,21 @@
  * under the License.
  */
 
-package de.chrthms.mco.delegates;
+package de.chrthms.iot.delegates;
 
-import de.chrthms.mco.MicroProcessEngine;
+import de.chrthms.iot.delegates.impl.MicroDelegateExecutionImpl;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.camunda.bpm.engine.delegate.JavaDelegate;
 
 /**
  * Created by christian on 25.05.17.
  */
-public interface MicroDelegateExecution extends DelegateExecution {
+public abstract class MicroJavaDelegate implements JavaDelegate {
 
-    public MicroProcessEngine getMicroProcessEngine();
+    public abstract void execute(MicroDelegateExecution execution) throws Exception;
 
+    @Override
+    public void execute(DelegateExecution execution) throws Exception {
+        execute(new MicroDelegateExecutionImpl(execution));
+    }
 }

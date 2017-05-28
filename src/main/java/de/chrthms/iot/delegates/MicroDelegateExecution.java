@@ -19,25 +19,16 @@
  * under the License.
  */
 
-package de.chrthms.mco.enums;
+package de.chrthms.iot.delegates;
+
+import de.chrthms.iot.MicroProcessEngine;
+import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 /**
  * Created by christian on 25.05.17.
  */
-public enum MqttQoS {
+public interface MicroDelegateExecution extends DelegateExecution {
 
-    AT_MOST_ONCE(0),
-    AT_LEAST_ONCE(1),
-    EXACTLY_ONCE(2);
-
-    private final int value;
-
-    private MqttQoS(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
+    public MicroProcessEngine getMicroProcessEngine();
 
 }
