@@ -22,7 +22,7 @@
 package de.chrthms.iot;
 
 import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.McoRuntimeException;
+import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
 import de.chrthms.iot.impl.MicroProcessEngineFactoryImpl;
 
 /**
@@ -48,61 +48,6 @@ public interface MicroProcessEngineFactory {
      */
     MicroProcessEngineFactory jdbcPassword(String password);
 
-    /**
-     * Must be activated to have mqtt support, else no MQTT client will be activated.
-     * @param enabled false by default
-     * @return the factory
-     */
-    MicroProcessEngineFactory mqttEnabled(Boolean enabled);
-
-    /**
-     * Describes the broker location. For example:
-     * "tcp://broker.mqttdashboard.com" or
-     * "tcp://iot.eclipse.org:1883"
-     *
-     * @param broker must be set for establish a connection.
-     * @return the factory
-     */
-    MicroProcessEngineFactory mqttBroker(String broker);
-
-    /**
-     * Possible to reconnect automatically, if server connection is lost.
-     * @param reconnect false per default
-     * @return
-     */
-    MicroProcessEngineFactory mqttAutoReconnect(Boolean reconnect);
-
-    MicroProcessEngineFactory mqttUsername(String username);
-
-    MicroProcessEngineFactory mqttPassword(String password);
-
-    /**
-     *
-     * Set the Quality of Service
-     *
-     * A good explanation
-     * http://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels
-     *
-     * @param qos "Exactly once (2)" per default
-     * @return the factory
-     */
-    MicroProcessEngineFactory mqttQoS(MqttQoS qos);
-
-    /**
-     * Specifies a client-id.
-     * @param clientId per default an id will be generated, if not set.
-     * @return the factory
-     */
-    MicroProcessEngineFactory mqttClientId(String clientId);
-
-    /**
-     * A good explanation
-     * http://www.hivemq.com/blog/mqtt-essentials-part-8-retained-messages
-     * @param retained false per default
-     * @return the factory
-     */
-    MicroProcessEngineFactory mqttRetained(Boolean retained);
-
-    MicroProcessEngine build()  throws McoRuntimeException;
+    MicroProcessEngine build()  throws MicroEngineRuntimeException;
 
 }

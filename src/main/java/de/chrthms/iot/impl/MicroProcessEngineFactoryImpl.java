@@ -24,8 +24,8 @@ package de.chrthms.iot.impl;
 import de.chrthms.iot.MicroProcessEngine;
 import de.chrthms.iot.MicroProcessEngineFactory;
 import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.McoRuntimeException;
-import de.chrthms.iot.platform.MicroBpmPlatform;
+import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
+import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -41,15 +41,6 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
     private String jdbcUrl = null;
     private String jdbcUsername = null;
     private String jdbcPassword = null;
-
-    private boolean mqttEnabled = false;
-    private String mqttBroker = null;
-    private boolean mqttAutoReconnect = false;
-    private String mqttUsername = null;
-    private String mqttPassword = null;
-    private String mqttClientId = null;
-    private MqttQoS mqttQoS = MqttQoS.EXACTLY_ONCE;
-    private boolean mqttRetained = false;
 
     private boolean isValuePresent(String value) {
         return value != null && !value.trim().isEmpty();
@@ -87,80 +78,12 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
     }
 
     @Override
-    public MicroProcessEngineFactory mqttEnabled(Boolean enabled) {
-        this.mqttEnabled = enabled;
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttBroker(String broker) {
-        this.mqttBroker = broker;
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttAutoReconnect(Boolean reconnect) {
-        this.mqttAutoReconnect = reconnect;
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttUsername(String username) {
-        this.mqttUsername = username;
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttPassword(String password) {
-        this.mqttPassword = password;
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttQoS(MqttQoS qos) {
-        this.mqttQoS = qos;
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttClientId(String clientId) {
-        return this;
-    }
-
-    @Override
-    public MicroProcessEngineFactory mqttRetained(Boolean retained) {
-        return this;
-    }
-
-    private MqttAsyncClient buildMqttClient() throws McoRuntimeException {
-        try {
-            MqttAsyncClient client = new MqttAsyncClient(mqttBroker, mqttClientId != null ? mqttClientId : MqttClient.generateClientId());
-
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setAutomaticReconnect(mqttAutoReconnect);
-
-            if (mqttUsername != null) {
-                options.setUserName(mqttUsername);
-                options.setPassword(mqttPassword.toCharArray());
-            }
-
-            client.connect(options);
-            return client;
-
-        } catch (Exception e) {
-            throw new McoRuntimeException("Could not build mqtt-client for micro process-engine. Check exception details!", e);
-        }
-    }
-
-    @Override
-    public MicroProcessEngine build() throws McoRuntimeException {
+    public MicroProcessEngine build() throws MicroEngineRuntimeException {
 
         try {
-
-            MicroProcessEngine microProcessEngine = null;
 
             if (isValueEmpty(jdbcDriver) || isValueEmpty(jdbcUrl)) {
-                throw new McoRuntimeException(new StringBuilder()
+                throw new MicroEngineRuntimeException(new StringBuilder()
                     .append("Missing information to build micro process-engine. At least jdbcDriver = '")
                     .append(jdbcDriver)
                     .append("' and jdbcUrl = '")
@@ -179,19 +102,16 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
                     .setJobExecutorActivate(Boolean.TRUE)
                     .buildProcessEngine();
 
-            if (mqttEnabled) {
-                microProcessEngine = new MicroProcessEngineImpl(processEngine, buildMqttClient(), mqttQoS, mqttRetained);
-            } else {
-                microProcessEngine = new MicroProcessEngineImpl(processEngine);
-            }
+            MicroProcessEngine microProcessEngine = new MicroProcessEngineImpl(processEngine);
 
-            MicroBpmPlatform.setMicroProcessEngine(microProcessEngine);
+            RuntimeContainerDelegate.INSTANCE.get().registerProcessEngine(microProcessEngine);
+
             return microProcessEngine;
 
-        } catch (McoRuntimeException e) {
+        } catch (MicroEngineRuntimeException e) {
           throw e;
         } catch (Exception e) {
-            throw new McoRuntimeException("Could not build micro process-engine. Check exception details!", e);
+            throw new MicroEngineRuntimeException("Could not build micro process-engine. Check exception details!", e);
         }
 
     }

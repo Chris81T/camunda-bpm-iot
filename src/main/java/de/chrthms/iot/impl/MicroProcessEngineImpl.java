@@ -21,10 +21,10 @@
 
 package de.chrthms.iot.impl;
 
-import de.chrthms.iot.MicroOpenhabService;
 import de.chrthms.iot.MicroProcessEngine;
 import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.McoRuntimeException;
+import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -58,7 +58,12 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     }
 
     @Override
-    public MicroOpenhabService getMicroOpenhabService() {
+    public MicroMqttService getMicroMqttService() {
+
+        /**
+         * Lazy Loading
+         */
+
         return null;
     }
 
@@ -80,16 +85,16 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     }
 
     @Override
-    public void sendMessageToItem(String topic, String message) throws McoRuntimeException {
+    public void sendMessageToItem(String topic, String message) throws MicroEngineRuntimeException {
         if (Optional.ofNullable(mqttClient).isPresent()) {
             try {
                 mqttClient.publish(topic, message.getBytes(), mqttQoS.getValue(), mqttRetained);
             } catch (MqttException e) {
-                throw new McoRuntimeException("Sending message to item failed!", e);
+                throw new MicroEngineRuntimeException("Sending message to item failed!", e);
             }
         }
 
-        throw new McoRuntimeException("No active MQTT client! Please configure one!");
+        throw new MicroEngineRuntimeException("No active MQTT client! Please configure one!");
     }
 
     @Override
@@ -106,7 +111,7 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
                 mqttClient.disconnect();
                 mqttClient.close();
             } catch (MqttException e) {
-                throw new McoRuntimeException("Disconnecting and closing the MQTT Client failed!", e);
+                throw new MicroEngineRuntimeException("Disconnecting and closing the MQTT Client failed!", e);
             }
         }
     }

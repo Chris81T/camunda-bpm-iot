@@ -24,6 +24,7 @@ package de.chrthms.iot.delegates.impl;
 import de.chrthms.iot.MicroProcessEngine;
 import de.chrthms.iot.delegates.MicroDelegateExecution;
 import de.chrthms.iot.platform.MicroBpmPlatform;
+import de.chrthms.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.ProcessEngineServices;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.variable.VariableMap;
@@ -49,6 +50,11 @@ public class MicroDelegateExecutionImpl implements MicroDelegateExecution {
     @Override
     public MicroProcessEngine getMicroProcessEngine() {
         return MicroBpmPlatform.getMicroProcessEngine();
+    }
+
+    @Override
+    public MicroMqttService getMicroMqttService() {
+        return null;
     }
 
     @Override

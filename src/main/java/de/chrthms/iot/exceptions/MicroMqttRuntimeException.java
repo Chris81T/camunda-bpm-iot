@@ -19,10 +19,19 @@
  * under the License.
  */
 
-package de.chrthms.iot;
+package de.chrthms.iot.exceptions;
 
 /**
- * Created by christian on 18.05.17.
+ * Created by christian on 29.05.17.
  */
-public interface MicroOpenhabService {
+public class MicroMqttRuntimeException extends RuntimeException {
+
+    public MicroMqttRuntimeException(String message) {
+        super(message);
+    }
+
+    public MicroMqttRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

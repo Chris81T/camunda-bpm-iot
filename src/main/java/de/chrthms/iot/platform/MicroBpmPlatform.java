@@ -22,20 +22,27 @@
 package de.chrthms.iot.platform;
 
 import de.chrthms.iot.MicroProcessEngine;
+import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
+import org.camunda.bpm.BpmPlatform;
+import org.camunda.bpm.engine.ProcessEngine;
 
 /**
+ * Does the same as the BpmPlatform class but will automatically cast the engine instance to the MicroProcessEngine
+ * class
+ *
  * Created by christian on 25.05.17.
  */
-public class MicroBpmPlatform {
-
-    private static MicroProcessEngine INSTANCE = null;
+public final class MicroBpmPlatform {
 
     public static MicroProcessEngine getMicroProcessEngine() {
-        return INSTANCE;
-    }
 
-    public static void setMicroProcessEngine(MicroProcessEngine microProcessEngine) {
-        INSTANCE = microProcessEngine;
+        ProcessEngine processEngine = BpmPlatform.getDefaultProcessEngine();
+
+        if (processEngine instanceof MicroProcessEngine) {
+            return (MicroProcessEngine) processEngine;
+        }
+
+        throw new MicroEngineRuntimeException("Default process engine is not the expected MicroProcessEngine!");
     }
 
 }

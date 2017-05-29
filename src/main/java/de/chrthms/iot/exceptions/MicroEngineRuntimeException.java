@@ -24,13 +24,13 @@ package de.chrthms.iot.exceptions;
 /**
  * Created by christian on 18.05.17.
  */
-public class McoRuntimeException extends RuntimeException {
+public class MicroEngineRuntimeException extends RuntimeException {
 
-    public McoRuntimeException(String message) {
+    public MicroEngineRuntimeException(String message) {
         super(message);
     }
 
-    public McoRuntimeException(String message, Throwable cause) {
+    public MicroEngineRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
 

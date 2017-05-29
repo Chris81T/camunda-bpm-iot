@@ -21,7 +21,8 @@
 
 package de.chrthms.iot;
 
-import de.chrthms.iot.exceptions.McoRuntimeException;
+import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.repository.Deployment;
 
@@ -30,7 +31,7 @@ import org.camunda.bpm.engine.repository.Deployment;
  */
 public interface MicroProcessEngine extends ProcessEngine {
 
-    MicroOpenhabService getMicroOpenhabService();
+    MicroMqttService getMicroMqttService();
 
     /**
      * Simply tell the name of bpmn file.
@@ -55,6 +56,6 @@ public interface MicroProcessEngine extends ProcessEngine {
      * @param topic
      * @param message
      */
-    void sendMessageToItem(String topic, String message) throws McoRuntimeException;
+    void sendMessageToItem(String topic, String message) throws MicroEngineRuntimeException;
 
 }

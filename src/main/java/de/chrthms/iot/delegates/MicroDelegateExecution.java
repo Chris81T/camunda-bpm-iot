@@ -22,6 +22,7 @@
 package de.chrthms.iot.delegates;
 
 import de.chrthms.iot.MicroProcessEngine;
+import de.chrthms.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 /**
@@ -30,5 +31,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 public interface MicroDelegateExecution extends DelegateExecution {
 
     public MicroProcessEngine getMicroProcessEngine();
+
+    public MicroMqttService getMicroMqttService();
 
 }
