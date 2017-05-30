@@ -25,12 +25,19 @@ import de.chrthms.iot.MicroProcessEngine;
 import de.chrthms.iot.MicroProcessEngineFactory;
 import de.chrthms.iot.enums.MqttQoS;
 import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.iot.platform.MicroBpmPlatform;
+import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
+import org.camunda.bpm.engine.ProcessEngines;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Created by christian on 18.05.17.
@@ -41,6 +48,8 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
     private String jdbcUrl = null;
     private String jdbcUsername = null;
     private String jdbcPassword = null;
+
+    private String engineName = ProcessEngines.NAME_DEFAULT;
 
     private boolean isValuePresent(String value) {
         return value != null && !value.trim().isEmpty();
@@ -78,6 +87,12 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
     }
 
     @Override
+    public MicroProcessEngineFactory engineName(String name) {
+        this.engineName = name;
+        return this;
+    }
+
+    @Override
     public MicroProcessEngine build() throws MicroEngineRuntimeException {
 
         try {
@@ -100,6 +115,7 @@ public class MicroProcessEngineFactoryImpl implements MicroProcessEngineFactory 
                     .setJdbcPassword(jdbcPassword)
                     .setHistory(ProcessEngineConfiguration.HISTORY_AUDIT)
                     .setJobExecutorActivate(Boolean.TRUE)
+                    .setProcessEngineName(engineName)
                     .buildProcessEngine();
 
             MicroProcessEngine microProcessEngine = new MicroProcessEngineImpl(processEngine);

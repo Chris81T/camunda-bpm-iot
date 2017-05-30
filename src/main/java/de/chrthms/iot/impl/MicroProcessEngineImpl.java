@@ -25,6 +25,7 @@ import de.chrthms.iot.MicroProcessEngine;
 import de.chrthms.iot.enums.MqttQoS;
 import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
 import de.chrthms.iot.services.MicroMqttService;
+import de.chrthms.iot.services.impl.MicroMqttServiceImpl;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -40,6 +41,11 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     private static final String DEFAULT_PROCESSES_FOLDER = "/processes";
 
     private final ProcessEngine processEngine;
+
+    /**
+     * This instance will only be generated, if the client request exists
+     */
+    private MicroMqttService microMqttService = null;
 
     private MqttAsyncClient mqttClient = null;
     private MqttQoS mqttQoS = null;
@@ -59,12 +65,10 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
 
     @Override
     public MicroMqttService getMicroMqttService() {
-
-        /**
-         * Lazy Loading
-         */
-
-        return null;
+        if (microMqttService == null) {
+            microMqttService = new MicroMqttServiceImpl();
+        }
+        return microMqttService;
     }
 
     @Override

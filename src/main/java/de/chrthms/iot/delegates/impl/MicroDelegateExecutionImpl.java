@@ -49,12 +49,12 @@ public class MicroDelegateExecutionImpl implements MicroDelegateExecution {
 
     @Override
     public MicroProcessEngine getMicroProcessEngine() {
-        return MicroBpmPlatform.getMicroProcessEngine();
+        return MicroBpmPlatform.getDefaultMicroProcessEngine();
     }
 
     @Override
     public MicroMqttService getMicroMqttService() {
-        return null;
+        return getMicroProcessEngine().getMicroMqttService();
     }
 
     @Override

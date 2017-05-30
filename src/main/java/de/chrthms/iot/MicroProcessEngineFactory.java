@@ -48,6 +48,8 @@ public interface MicroProcessEngineFactory {
      */
     MicroProcessEngineFactory jdbcPassword(String password);
 
+    MicroProcessEngineFactory engineName(String name);
+
     MicroProcessEngine build()  throws MicroEngineRuntimeException;
 
 }
