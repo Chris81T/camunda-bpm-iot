@@ -1,8 +1,8 @@
-package de.chrthms.iot.services.impl;
+package de.chrthms.bpm.iot.services.impl;
 
-import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.MicroMqttRuntimeException;
-import de.chrthms.iot.services.MicroMqttService;
+import de.chrthms.bpm.iot.enums.MqttQoS;
+import de.chrthms.bpm.iot.exceptions.MicroMqttRuntimeException;
+import de.chrthms.bpm.iot.services.MicroMqttService;
 
 /**
  * Created by christian on 29.05.17.

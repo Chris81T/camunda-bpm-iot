@@ -1,4 +1,4 @@
-package de.chrthms.iot;
+package de.chrthms.bpm.iot;
 
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.ProcessEngine;

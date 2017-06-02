@@ -19,10 +19,10 @@
  * under the License.
  */
 
-package de.chrthms.iot.delegates;
+package de.chrthms.bpm.iot.delegates;
 
-import de.chrthms.iot.MicroProcessEngine;
-import de.chrthms.iot.services.MicroMqttService;
+import de.chrthms.bpm.iot.MicroProcessEngine;
+import de.chrthms.bpm.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 
 /**

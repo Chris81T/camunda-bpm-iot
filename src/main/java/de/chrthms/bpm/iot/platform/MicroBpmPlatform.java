@@ -19,14 +19,13 @@
  * under the License.
  */
 
-package de.chrthms.iot.platform;
+package de.chrthms.bpm.iot.platform;
 
-import de.chrthms.iot.MicroProcessEngine;
-import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.bpm.iot.MicroProcessEngine;
+import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.ProcessEngine;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**

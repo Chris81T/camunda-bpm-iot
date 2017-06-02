@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package de.chrthms.iot.enums;
+package de.chrthms.bpm.iot.enums;
 
 /**
  * Created by christian on 25.05.17.

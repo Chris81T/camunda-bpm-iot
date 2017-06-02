@@ -5,14 +5,15 @@
     
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>de.chrthms.iot</groupId>
-    <artifactId>micro-camunda</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>de.chrthms.bpm.iot</groupId>
+    <artifactId>camunda-bpm-iot</artifactId>
+    <version>${camunda.version}-SNAPSHOT</version>
     <packaging>jar</packaging>
     
-    <name>${project.artifactId} : ${project.version}</name>
+    <name>${project.artifactId} (internet of things) : ${project.version}</name>
 
     <properties>
+        <camunda.version>7.7.0</camunda.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -31,7 +32,7 @@
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-engine</artifactId>
-            <version>7.6.0</version>
+            <version>${camunda.version}</version>
         </dependency>
 
         <dependency>
@@ -40,12 +41,7 @@
             <version>1.1.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.195</version>
-        </dependency>
-
+        <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -56,6 +52,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.195</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

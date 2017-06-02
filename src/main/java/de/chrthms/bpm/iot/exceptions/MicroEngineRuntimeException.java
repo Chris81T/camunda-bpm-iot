@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package de.chrthms.iot.exceptions;
+package de.chrthms.bpm.iot.exceptions;
 
 /**
  * Created by christian on 18.05.17.

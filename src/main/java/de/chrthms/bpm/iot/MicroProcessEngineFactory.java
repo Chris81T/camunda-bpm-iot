@@ -19,11 +19,10 @@
  * under the License.
  */
 
-package de.chrthms.iot;
+package de.chrthms.bpm.iot;
 
-import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
-import de.chrthms.iot.impl.MicroProcessEngineFactoryImpl;
+import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.bpm.iot.impl.MicroProcessEngineFactoryImpl;
 
 /**
  * Created by christian on 18.05.17.

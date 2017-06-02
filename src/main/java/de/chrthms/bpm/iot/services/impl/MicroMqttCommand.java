@@ -1,7 +1,7 @@
-package de.chrthms.iot.services.impl;
+package de.chrthms.bpm.iot.services.impl;
 
-import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.MicroMqttRuntimeException;
+import de.chrthms.bpm.iot.exceptions.MicroMqttRuntimeException;
+import de.chrthms.bpm.iot.enums.MqttQoS;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;

@@ -19,13 +19,13 @@
  * under the License.
  */
 
-package de.chrthms.iot.impl;
+package de.chrthms.bpm.iot.impl;
 
-import de.chrthms.iot.MicroProcessEngine;
-import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
-import de.chrthms.iot.services.MicroMqttService;
-import de.chrthms.iot.services.impl.MicroMqttServiceImpl;
+import de.chrthms.bpm.iot.MicroProcessEngine;
+import de.chrthms.bpm.iot.enums.MqttQoS;
+import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.bpm.iot.services.MicroMqttService;
+import de.chrthms.bpm.iot.services.impl.MicroMqttServiceImpl;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;

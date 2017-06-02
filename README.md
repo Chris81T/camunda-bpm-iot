@@ -1,4 +1,4 @@
-# micro-camunda-openhab (mco)
+# camunda-bpm-iot (business process management - internet of things)
 
 ## Draft
 ![Draft](/docs/draft.jpg)

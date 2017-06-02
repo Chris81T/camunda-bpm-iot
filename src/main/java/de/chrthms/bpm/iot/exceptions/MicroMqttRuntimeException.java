@@ -19,22 +19,19 @@
  * under the License.
  */
 
-package de.chrthms.iot.delegates;
-
-import de.chrthms.iot.delegates.impl.MicroDelegateExecutionImpl;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+package de.chrthms.bpm.iot.exceptions;
 
 /**
- * Created by christian on 25.05.17.
+ * Created by christian on 29.05.17.
  */
-public interface MicroJavaDelegate extends JavaDelegate {
+public class MicroMqttRuntimeException extends RuntimeException {
 
-    void execute(MicroDelegateExecution execution) throws Exception;
-
-    @Override
-    default void execute(DelegateExecution execution) throws Exception {
-        System.out.println("DEFAULT EXECUTE IMPL INSIDE THE INTERFACE TESTOR...");
-        execute(new MicroDelegateExecutionImpl(execution));
+    public MicroMqttRuntimeException(String message) {
+        super(message);
     }
+
+    public MicroMqttRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

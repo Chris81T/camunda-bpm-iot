@@ -19,25 +19,15 @@
  * under the License.
  */
 
-package de.chrthms.iot.impl;
+package de.chrthms.bpm.iot.impl;
 
-import de.chrthms.iot.MicroProcessEngine;
-import de.chrthms.iot.MicroProcessEngineFactory;
-import de.chrthms.iot.enums.MqttQoS;
-import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
-import de.chrthms.iot.platform.MicroBpmPlatform;
-import org.camunda.bpm.BpmPlatform;
+import de.chrthms.bpm.iot.MicroProcessEngine;
+import de.chrthms.bpm.iot.MicroProcessEngineFactory;
+import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.ProcessEngineConfiguration;
 import org.camunda.bpm.engine.ProcessEngines;
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Created by christian on 18.05.17.

@@ -19,10 +19,10 @@
  * under the License.
  */
 
-package de.chrthms.iot;
+package de.chrthms.bpm.iot;
 
-import de.chrthms.iot.exceptions.MicroEngineRuntimeException;
-import de.chrthms.iot.services.MicroMqttService;
+import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
+import de.chrthms.bpm.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.repository.Deployment;
 
