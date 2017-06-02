@@ -26,6 +26,7 @@ import de.chrthms.bpm.iot.enums.MqttQoS;
 import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import de.chrthms.bpm.iot.services.MicroMqttService;
 import de.chrthms.bpm.iot.services.impl.MicroMqttServiceImpl;
+import org.camunda.bpm.container.RuntimeContainerDelegate;
 import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -109,6 +110,8 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     @Override
     public void close() {
         processEngine.close();
+
+        RuntimeContainerDelegate.INSTANCE.get().unregisterProcessEngine(this);
 
         if (Optional.ofNullable(mqttClient).isPresent()) {
             try {

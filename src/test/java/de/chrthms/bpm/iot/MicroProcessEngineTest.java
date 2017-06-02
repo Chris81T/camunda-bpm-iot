@@ -10,14 +10,14 @@ import org.junit.Test;
  */
 public class MicroProcessEngineTest {
 
-// TODO Problems while no own jvm execution
-//    @Test
-    public void testBpmPlatformMicroEngine() {
+    private final String driver = "org.h2.Driver";
+    private final String url = "jdbc:h2:mem:test";
+    private final String username = "sa";
+    private final String password = "sa";
 
-        final String driver = "org.h2.Driver";
-        final String url = "jdbc:h2:mem:test";
-        final String username = "sa";
-        final String password = "sa";
+
+    @Test
+    public void testBpmPlatformMicroEngine() {
 
         MicroProcessEngine microProcessEngine = MicroProcessEngineFactory.getInstance()
                 .jdbcDriver(driver)
@@ -34,14 +34,8 @@ public class MicroProcessEngineTest {
 
     }
 
-// TODO Problems while no own jvm execution
-//    @Test
+    @Test
     public void testCreateEngineWithSpecialName() throws InterruptedException {
-
-        final String driver = "org.h2.Driver";
-        final String url = "jdbc:h2:mem:test";
-        final String username = "sa";
-        final String password = "sa";
 
         final String engineName = "customEngine";
 
@@ -62,11 +56,6 @@ public class MicroProcessEngineTest {
 
     @Test
     public void testCreateTwoEnginesWithSpecialNames() {
-
-        final String driver = "org.h2.Driver";
-        final String url = "jdbc:h2:mem:test";
-        final String username = "sa";
-        final String password = "sa";
 
         final String engineName = "customEngineTWin1";
         final String engineNameTwo = "customEngineTWin2";
@@ -94,6 +83,40 @@ public class MicroProcessEngineTest {
 
         microProcessEngine.close();
         microProcessEngine2.close();
+    }
+
+    /**
+     * This test checks, that the micro-engine will unregistered at the BPMPlatform, if the engine will be closed.
+     */
+    @Test
+    public void testCreateTwoEnginesWithSameNameSequentially() {
+
+        final String engineName = "customEngine";
+
+        MicroProcessEngine microProcessEngine = MicroProcessEngineFactory.getInstance()
+                .jdbcDriver(driver)
+                .jdbcUrl(url)
+                .jdbcUsername(username)
+                .jdbcPassword(password)
+                .engineName(engineName)
+                .build();
+
+        Assert.assertNull(BpmPlatform.getDefaultProcessEngine());
+        Assert.assertEquals(microProcessEngine, BpmPlatform.getProcessEngineService().getProcessEngine(engineName));
+        microProcessEngine.close();
+
+        MicroProcessEngine microProcessEngine2 = MicroProcessEngineFactory.getInstance()
+                .jdbcDriver(driver)
+                .jdbcUrl(url)
+                .jdbcUsername(username)
+                .jdbcPassword(password)
+                .engineName(engineName)
+                .build();
+
+        Assert.assertNull(BpmPlatform.getDefaultProcessEngine());
+        Assert.assertEquals(microProcessEngine2, BpmPlatform.getProcessEngineService().getProcessEngine(engineName));
+        microProcessEngine2.close();
+
     }
 
 }
