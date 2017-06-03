@@ -26,7 +26,9 @@ import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import org.camunda.bpm.BpmPlatform;
 import org.camunda.bpm.engine.ProcessEngine;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Does the same as the BpmPlatform class but will automatically cast the engine instance to the MicroProcessEngine
@@ -62,6 +64,13 @@ public final class MicroBpmPlatform {
     public static Optional<MicroProcessEngine> getMicroProcessEngine(String engineName) {
         ProcessEngine processEngine = BpmPlatform.getProcessEngineService().getProcessEngine(engineName);
         return Optional.ofNullable(castToMicroEngine(processEngine));
+    }
+
+    public static List<MicroProcessEngine> getMicroProcessEngines() {
+        return BpmPlatform.getProcessEngineService().getProcessEngines().stream()
+                .filter(engine -> engine instanceof MicroProcessEngine)
+                .map(engine -> (MicroProcessEngine) engine)
+                .collect(Collectors.toList());
     }
 
 }

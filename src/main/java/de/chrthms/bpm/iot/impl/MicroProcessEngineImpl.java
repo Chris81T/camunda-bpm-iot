@@ -22,7 +22,7 @@
 package de.chrthms.bpm.iot.impl;
 
 import de.chrthms.bpm.iot.MicroProcessEngine;
-import de.chrthms.bpm.iot.enums.MqttQoS;
+import de.chrthms.bpm.iot.services.enums.MqttQoS;
 import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import de.chrthms.bpm.iot.services.MicroMqttService;
 import de.chrthms.bpm.iot.services.impl.MicroMqttServiceImpl;

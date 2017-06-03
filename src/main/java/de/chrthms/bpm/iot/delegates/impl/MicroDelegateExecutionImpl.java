@@ -23,18 +23,18 @@ package de.chrthms.bpm.iot.delegates.impl;
 
 import de.chrthms.bpm.iot.MicroProcessEngine;
 import de.chrthms.bpm.iot.delegates.MicroDelegateExecution;
+import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import de.chrthms.bpm.iot.platform.MicroBpmPlatform;
 import de.chrthms.bpm.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.ProcessEngineServices;
+import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.FlowElement;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by christian on 25.05.17.
@@ -49,7 +49,19 @@ public class MicroDelegateExecutionImpl implements MicroDelegateExecution {
 
     @Override
     public MicroProcessEngine getMicroProcessEngine() {
-        return MicroBpmPlatform.getDefaultMicroProcessEngine();
+
+        Optional<MicroProcessEngine> engine = MicroBpmPlatform.getMicroProcessEngine(ProcessEngines.NAME_DEFAULT);
+
+        if (engine.isPresent()) return engine.get();
+
+        // no default engine exists. check if one engine with alternative name is present
+        List<MicroProcessEngine> engines = MicroBpmPlatform.getMicroProcessEngines();
+        if (engines.size() == 1) {
+            return engines.get(0);
+        }
+
+        throw new MicroEngineRuntimeException("At least no default engine or exactly one engine with alternative name " +
+                "is set (maybe multiple engines --> one of them must be the default engine)!");
     }
 
     @Override
