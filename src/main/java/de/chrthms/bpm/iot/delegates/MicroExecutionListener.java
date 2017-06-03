@@ -17,16 +17,26 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
  */
 
 package de.chrthms.bpm.iot.delegates;
 
-import de.chrthms.bpm.iot.MicroProcessEngine;
-import de.chrthms.bpm.iot.services.MicroMqttService;
+import de.chrthms.bpm.iot.delegates.MicroDelegateExecution;
+import de.chrthms.bpm.iot.delegates.impl.MicroDelegateExecutionImpl;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.camunda.bpm.engine.delegate.ExecutionListener;
 
 /**
- * Created by christian on 25.05.17.
+ * Created by christian on 03.06.17.
  */
-public interface MicroDelegateExecution extends DelegateExecution, MicroEngineServices {
+public interface MicroExecutionListener extends ExecutionListener {
+
+    void notify(MicroDelegateExecution execution) throws Exception;
+
+    @Override
+    default void notify(DelegateExecution execution) throws Exception {
+        notify(new MicroDelegateExecutionImpl(execution));
+    }
+
 }

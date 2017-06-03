@@ -39,34 +39,12 @@ import java.util.*;
 /**
  * Created by christian on 25.05.17.
  */
-public class MicroDelegateExecutionImpl implements MicroDelegateExecution {
+public class MicroDelegateExecutionImpl extends AbstractMicroEngineServicesImpl implements MicroDelegateExecution {
 
     private final DelegateExecution delegateExecution;
 
     public MicroDelegateExecutionImpl(DelegateExecution delegateExecution) {
         this.delegateExecution = delegateExecution;
-    }
-
-    @Override
-    public MicroProcessEngine getMicroProcessEngine() {
-
-        Optional<MicroProcessEngine> engine = MicroBpmPlatform.getMicroProcessEngine(ProcessEngines.NAME_DEFAULT);
-
-        if (engine.isPresent()) return engine.get();
-
-        // no default engine exists. check if one engine with alternative name is present
-        List<MicroProcessEngine> engines = MicroBpmPlatform.getMicroProcessEngines();
-        if (engines.size() == 1) {
-            return engines.get(0);
-        }
-
-        throw new MicroEngineRuntimeException("At least no default engine or exactly one engine with alternative name " +
-                "is set (maybe multiple engines --> one of them must be the default engine)!");
-    }
-
-    @Override
-    public MicroMqttService getMicroMqttService() {
-        return getMicroProcessEngine().getMicroMqttService();
     }
 
     @Override

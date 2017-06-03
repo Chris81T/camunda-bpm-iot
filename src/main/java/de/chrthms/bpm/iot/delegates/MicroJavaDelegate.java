@@ -34,7 +34,6 @@ public interface MicroJavaDelegate extends JavaDelegate {
 
     @Override
     default void execute(DelegateExecution execution) throws Exception {
-        System.out.println("DEFAULT EXECUTE IMPL INSIDE THE INTERFACE TESTOR...");
         execute(new MicroDelegateExecutionImpl(execution));
     }
 }

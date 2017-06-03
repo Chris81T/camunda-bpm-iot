@@ -17,23 +17,21 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
  */
 
-package de.chrthms.bpm.iot.delegates.impl;
+package de.chrthms.bpm.iot.delegates;
 
-import de.chrthms.bpm.iot.delegates.MicroDelegateExecution;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import de.chrthms.bpm.iot.MicroProcessEngine;
+import de.chrthms.bpm.iot.services.MicroMqttService;
 
 /**
- * Created by christian on 25.05.17.
+ * Created by christian on 03.06.17.
  */
-public abstract class MicroJavaDelegateImpl implements JavaDelegate {
+public interface MicroEngineServices {
 
-    public abstract void execute(MicroDelegateExecution execution) throws Exception;
+    MicroProcessEngine getMicroProcessEngine();
 
-    @Override
-    public void execute(DelegateExecution execution) throws Exception {
-        execute(new MicroDelegateExecutionImpl(execution));
-    }
+    MicroMqttService getMicroMqttService();
+
 }
