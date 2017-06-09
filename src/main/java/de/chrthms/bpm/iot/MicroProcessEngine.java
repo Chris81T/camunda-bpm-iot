@@ -36,10 +36,32 @@ public interface MicroProcessEngine extends ProcessEngine {
     /**
      * Simply tell the name of bpmn file.
      *
+     * The convention is, that under resources folder a "processes" folder holds all processes
+     *
      * @param filename e.g. "my-process.bpmn"
      * @return
      */
-    Deployment createDeploymentFromResource(String filename);
+    Deployment createProcessDeploymentFromResource(String filename);
+
+    /**
+     * Simply tell the name of dmn file.
+     *
+     * The convention is, that under resources folder a "rules" folder holds all processes
+     *
+     * @param filename e.g. "my-rule.dmn"
+     * @return
+     */
+    Deployment createRuleDeploymentFromResource(String filename);
+
+    /**
+     * Simply tell the name of cmmn file.
+     *
+     * The convention is, that under resources folder a "cases" folder holds all processes
+     *
+     * @param filename e.g. "my-case.cmmn"
+     * @return
+     */
+    Deployment createCaseDeploymentFromResource(String filename);
 
     /**
      * Use this one, if process file is not inside the src/main/resources/processes folder to deploy an available

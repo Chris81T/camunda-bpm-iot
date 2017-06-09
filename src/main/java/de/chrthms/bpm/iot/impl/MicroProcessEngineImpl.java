@@ -40,6 +40,8 @@ import java.util.Optional;
 public class MicroProcessEngineImpl implements MicroProcessEngine {
 
     private static final String DEFAULT_PROCESSES_FOLDER = "/processes";
+    private static final String DEFAULT_RULES_FOLDER = "/rules";
+    private static final String DEFAULT_CASES_FOLDER = "/cases";
 
     private final ProcessEngine processEngine;
 
@@ -73,8 +75,18 @@ public class MicroProcessEngineImpl implements MicroProcessEngine {
     }
 
     @Override
-    public Deployment createDeploymentFromResource(String filename) {
+    public Deployment createProcessDeploymentFromResource(String filename) {
         return createDeploymentFromResource(DEFAULT_PROCESSES_FOLDER, filename);
+    }
+
+    @Override
+    public Deployment createRuleDeploymentFromResource(String filename) {
+        return createDeploymentFromResource(DEFAULT_RULES_FOLDER, filename);
+    }
+
+    @Override
+    public Deployment createCaseDeploymentFromResource(String filename) {
+        return createDeploymentFromResource(DEFAULT_CASES_FOLDER, filename);
     }
 
     @Override
