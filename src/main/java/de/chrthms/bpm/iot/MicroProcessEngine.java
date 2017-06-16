@@ -21,7 +21,6 @@
 
 package de.chrthms.bpm.iot;
 
-import de.chrthms.bpm.iot.exceptions.MicroEngineRuntimeException;
 import de.chrthms.bpm.iot.services.MicroMqttService;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.repository.Deployment;
@@ -72,12 +71,5 @@ public interface MicroProcessEngine extends ProcessEngine {
      * @return
      */
     Deployment createDeploymentFromResource(String folderName, String filename);
-
-    /**
-     * TODO First test implementation...
-     * @param topic
-     * @param message
-     */
-    void sendMessageToItem(String topic, String message) throws MicroEngineRuntimeException;
 
 }

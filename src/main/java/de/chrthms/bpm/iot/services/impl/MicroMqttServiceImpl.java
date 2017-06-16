@@ -1,13 +1,20 @@
 package de.chrthms.bpm.iot.services.impl;
 
-import de.chrthms.bpm.iot.services.enums.MqttQoS;
+import de.chrthms.bpm.iot.MicroProcessEngine;
 import de.chrthms.bpm.iot.exceptions.MicroMqttRuntimeException;
 import de.chrthms.bpm.iot.services.MicroMqttService;
+import de.chrthms.bpm.iot.services.enums.MqttQoS;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by christian on 29.05.17.
  */
 public class MicroMqttServiceImpl implements MicroMqttService {
+
+    private final MicroProcessEngine processEngine;
 
     private String defaultBrokerUrl = null;
     private boolean defaultAutoReconnect = false;
@@ -16,6 +23,26 @@ public class MicroMqttServiceImpl implements MicroMqttService {
     private String defaultClientId = null;
     private MqttQoS defaultQoS = MqttQoS.EXACTLY_ONCE;
     private boolean defaultRetained = false;
+
+    private List<MicroMqttCommand> subscribedCommands = new ArrayList<>();
+
+    public MicroMqttServiceImpl(MicroProcessEngine processEngine) {
+        this.processEngine = processEngine;
+    }
+
+    public MicroProcessEngine getProcessEngine() {
+        return processEngine;
+    }
+
+    public void registerSubscribedCommand(MicroMqttCommand command) {
+        subscribedCommands.add(command);
+    }
+
+    public void unregisterSubscribedCommand(MicroMqttCommand command) {
+        subscribedCommands = subscribedCommands.stream()
+                .filter(current -> current != command)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public MicroMqttService defaultBroker(String brokerUrl) {

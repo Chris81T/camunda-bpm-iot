@@ -59,7 +59,29 @@
             <version>1.4.195</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.moquette</groupId>
+            <artifactId>moquette-broker</artifactId>
+            <version>0.9</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
+    <!-- relevant for embedded Mqtt broker moquette for testing purposes -->
+    <repositories>
+        <repository>
+            <id>bintray</id>
+            <url>https://jcenter.bintray.com</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
