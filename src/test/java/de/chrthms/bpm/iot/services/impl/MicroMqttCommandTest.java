@@ -22,10 +22,15 @@
 
 package de.chrthms.bpm.iot.services.impl;
 
+import de.chrthms.bpm.iot.MicroProcessEngine;
+import de.chrthms.bpm.iot.MicroProcessEngineFactory;
 import de.chrthms.bpm.iot.services.MicroMqttService;
 import io.moquette.interception.AbstractInterceptHandler;
 import io.moquette.interception.messages.InterceptPublishMessage;
 import io.moquette.server.Server;
+import org.camunda.bpm.engine.repository.Deployment;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.test.assertions.ProcessEngineTests;
 import org.eclipse.paho.client.mqttv3.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +46,11 @@ public class MicroMqttCommandTest {
 
     private static final String BROKER_URL = "tcp://0.0.0.0:1883";
 
+    private final String driver = "org.h2.Driver";
+    private final String url = "jdbc:h2:mem:test";
+    private final String username = "sa";
+    private final String password = "sa";
+
     static class PublisherListener extends AbstractInterceptHandler {
         @Override
         public void onPublish(InterceptPublishMessage message) {
@@ -50,7 +60,8 @@ public class MicroMqttCommandTest {
     }
 
     private Server mqttBroker = null;
-    private MicroMqttService microMqttService;
+    private MicroProcessEngine engine = null;
+    private MicroMqttService mqttService = null;
 
     @Before
     public void before() throws IOException, URISyntaxException {
@@ -59,9 +70,15 @@ public class MicroMqttCommandTest {
         mqttBroker.startServer(config);
         mqttBroker.addInterceptHandler(new PublisherListener());
 
-        microMqttService = new MicroMqttServiceImpl(null);
-        microMqttService.defaultBroker(BROKER_URL);
+        engine = MicroProcessEngineFactory.getInstance()
+                .jdbcPassword(password)
+                .jdbcUsername(username)
+                .jdbcUrl(url)
+                .jdbcDriver(driver)
+                .build();
 
+        mqttService = engine.getMicroMqttService();
+        mqttService.defaultBroker(BROKER_URL);
     }
 
     /**
@@ -101,14 +118,44 @@ public class MicroMqttCommandTest {
         client.connect();
         client.subscribe(topic);
 
-        // using the micro-mqtt service to publish a message to assert, that paho observable will react on it
-        microMqttService.createMqttCommand()
+        // using the micro-mqtt mqttService to publish a message to assert, that paho observable will react on it
+        mqttService.createMqttCommand()
             .topic(topic)
             .publish("Hello Moquette JUnit World!")
             .execute();
 
         client.disconnect();
         client.close();
+    }
+
+    @Test
+    public void subscribeTest() {
+
+        final String topic = "junit/topic";
+
+        Deployment deployment = engine.createProcessDeploymentFromResource("mqtt-send-message-to-process.bpmn");
+        ProcessInstance processInstance = engine.getRuntimeService().startProcessInstanceByKey("Process_MqttSendMsqToProcess");
+
+        ProcessEngineTests.assertThat(processInstance)
+                .isStarted()
+                .isWaitingAt("Task_Receive")
+                .isWaitingFor("Message_mqtt");
+
+        mqttService.createMqttCommand()
+                .topic(topic)
+                .subscribe("Process_MqttSendMsqToProcess", "Message_mqtt", "mqttMessage")
+                .execute();
+
+        // using the micro-mqtt mqttService to publish a message to assert, that paho observable will react on it
+        mqttService.createMqttCommand()
+                .topic(topic)
+                .publish("This content should be send over Mqtt Broker back to the mqttService to send it to the running process...")
+                .execute();
+
+        ProcessEngineTests.assertThat(processInstance)
+                .hasPassed("Task_Receive")
+                .isEnded();
+
     }
 
 }

@@ -79,6 +79,9 @@ target/
 bin/
 dist/
 
+#ignore any paho folder at root
+paho*/
+
 #ignore JRebel typical files
 rebel.xml
 
